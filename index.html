@@ -26,7 +26,6 @@
   .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:8px 0 12px}
   .controls .spacer{flex:1}
   input[type="text"]{width:100%;max-width:560px;padding:8px 10px;border-radius:10px;border:1px solid #2c3448;background:#0e1118;color:var(--text)}
-  textarea{width:100%;min-height:160px;resize:vertical;border-radius:12px;border:1px solid #273049;background:#0e1118;color:var(--text);padding:12px;font-family:ui-monospace,Consolas,Menlo,monospace}
   button{background:#1f2534;color:var(--text);border:1px solid #2c3448;padding:8px 12px;border-radius:12px;cursor:pointer;font-weight:700}
   button:hover{background:#232a3c}
   .btn-primary{background:var(--accent);border-color:var(--accent);color:#fff}
@@ -89,15 +88,6 @@
         <span id="statusBadge" class="badge">Aucune donnée</span>
       </div>
       <div id="messageArea"></div>
-
-      <h3 style="margin-top:14px">Collage manuel (à ignorer)</h3>
-      <p class="badge">Format : un objet par date, valeurs “Disponible/Indisponible”.</p>
-      <textarea id="jsonInput" placeholder="Collez ici vos données JSON si l’URL n’est pas accessible…"></textarea>
-      <div class="controls">
-        <button id="btnApply">Appliquer le JSON collé</button>
-        <button id="btnSample">Load Sample Data</button>
-        <button id="btnClear" class="btn-danger">Effacer</button>
-      </div>
 
       <h3>Filtres et légende</h3>
       <div class="row" style="gap:16px">
@@ -217,7 +207,7 @@
     throw new Error("Impossible d’interpréter la réponse comme JSON.");
   }
 
-  /* ---------- Rendu MENSUEL = comme la capture ---------- */
+  /* ---------- Rendu MENSUEL ---------- */
   function render(){
     if(viewMode==="month") renderMonth(); else renderYear();
   }
@@ -230,10 +220,8 @@
     const firstDow = weekDay(first);
     const total = daysInMon(y,m);
 
-    // cases muettes avant le 1er du mois
     for(let i=0;i<firstDow;i++) area.appendChild(el("div","cell muted"));
 
-    // jours du mois
     for(let day=1; day<=total; day++){
       const cell = el("div","cell");
       cell.appendChild(el("div","daynum", String(day)));
@@ -243,7 +231,6 @@
       const dots = el("div","dots");
 
       if(entry){
-        // ordre des pastilles : bleu, rouge, vert, violet
         const order=["La Folie","La Corniche","La Bastide","Le Cottage"];
         for(const p of order){
           if(!enabledProps.has(p)) continue;
@@ -254,11 +241,10 @@
       area.appendChild(cell);
     }
 
-    // cases muettes pour compléter la dernière ligne
     const rem=(firstDow+total)%7; if(rem!==0){for(let i=rem;i<7;i++) area.appendChild(el("div","cell muted")); }
   }
 
-  /* ---------- Rendu ANNUEL (inchangé) ---------- */
+  /* ---------- Rendu ANNUEL ---------- */
   function renderYear(){
     const area=$("#calendarArea"); area.innerHTML="";
     const y=current.getUTCFullYear(); $("#periodLabel").textContent=`Année ${y}`;
@@ -295,32 +281,6 @@
     cb.addEventListener("change",()=>{const p=cb.getAttribute("data-prop"); if(cb.checked) enabledProps.add(p); else enabledProps.delete(p); render();});
   });
 
-  $("#btnApply").addEventListener("click",()=>{
-    const raw=$("#jsonInput").value.trim();
-    if(!raw){dataMap.clear();updateBadge();render();msg("ok","Données effacées.");return;}
-    try{ loadData(JSON.parse(raw)); }catch(e){ msg("error","JSON invalide : "+e.message); }
-  });
-  $("#btnClear").addEventListener("click",()=>{ $("#jsonInput").value=""; dataMap.clear(); updateBadge(); render(); msg("ok","Données effacées."); });
-  $("#btnSample").addEventListener("click",()=>{
-    const sample=[
-      {"date":"2025-09-14","La Folie":"Indisponible","La Corniche":"Indisponible","La Bastide":"Disponible","Le Cottage":"Indisponible"},
-      {"date":"2025-09-16","La Folie":"Disponible","La Corniche":"Indisponible","La Bastide":"Disponible","Le Cottage":"Indisponible"},
-      {"date":"2025-09-17","La Folie":"Disponible","La Corniche":"Disponible","La Bastide":"Indisponible","Le Cottage":"Indisponible"},
-      {"date":"2025-09-18","La Folie":"Indisponible","La Corniche":"Indisponible","La Bastide":"Indisponible","Le Cottage":"Indisponible"},
-      {"date":"2025-09-19","La Folie":"Indisponible","La Corniche":"Indisponible","La Bastide":"Disponible","Le Cottage":"Disponible"},
-      {"date":"2025-09-20","La Folie":"Disponible","La Corniche":"Disponible","La Bastide":"Indisponible","Le Cottage":"Disponible"},
-      {"date":"2025-09-23","La Folie":"Disponible","La Corniche":"Indisponible","La Bastide":"Disponible","Le Cottage":"Indisponible"},
-      {"date":"2025-09-24","La Folie":"Indisponible","La Corniche":"Disponible","La Bastide":"Indisponible","Le Cottage":"Disponible"},
-      {"date":"2025-09-25","La Folie":"Disponible","La Corniche":"Indisponible","La Bastide":"Disponible","Le Cottage":"Indisponible"},
-      {"date":"2025-09-26","La Folie":"Disponible","La Corniche":"Disponible","La Bastide":"Disponible","Le Cottage":"Indisponible"},
-      {"date":"2025-09-27","La Folie":"Indisponible","La Corniche":"Indisponible","La Bastide":"Disponible","Le Cottage":"Indisponible"},
-      {"date":"2025-09-28","La Folie":"Disponible","La Corniche":"Disponible","La Bastide":"Disponible","Le Cottage":"Indisponible"},
-      {"date":"2025-09-29","La Folie":"Indisponible","La Corniche":"Disponible","La Bastide":"Disponible","Le Cottage":"Disponible"},
-      {"date":"2025-09-30","La Folie":"Disponible","La Corniche":"Indisponible","La Bastide":"Disponible","Le Cottage":"Disponible"}
-    ];
-    $("#jsonInput").value=JSON.stringify(sample,null,2); msg(null,"");
-  });
-
   async function fetchFromUrl(){
     const url=$("#sourceUrl").value.trim(); if(!url){msg("error","Veuillez saisir une URL.");return;}
     msg(null,"");
@@ -343,6 +303,3 @@
 </script>
 </body>
 </html>
-
-
-
