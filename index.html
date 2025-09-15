@@ -184,28 +184,35 @@
     updateBadge(); render(); msg("ok","Données chargées.");
   }
 
-  // Extraction JSON depuis une réponse HTTP
-  async function fetchAndParse(url){
-    const res = await fetch(url, {headers:{'Accept':'application/json,text/plain;q=0.9,*/*;q=0.8'}});
-    // 1) Tente JSON direct
-    try {
-      const j = await res.clone().json();
-      if (j && (Array.isArray(j) || typeof j==="object")) return j;
-    } catch(_) {}
-    // 2) Tente extraction depuis texte/HTML (tableau JSON entre crochets)
-    const text = await res.text();
-    // Cherche un <script type="application/json">…</script>
-    const scriptMatch = text.match(/<script[^>]*type=["']application\/json["'][^>]*>([\s\S]*?)<\/script>/i);
-    if (scriptMatch){
-      try { return JSON.parse(scriptMatch[1]); } catch(_) {}
+  // Extraction JSON depuis une réponse HTTP (version sûre, sans "</script>" littéral)
+async function fetchAndParse(url){
+  const res = await fetch(url, {
+    headers: { 'Accept': 'application/json,text/plain;q=0.9,*/*;q=0.8' }
+  });
+
+  // 1) Essai JSON direct
+  try {
+    const j = await res.clone().json();
+    if (j && (Array.isArray(j) || typeof j === 'object')) return j;
+  } catch (_) {}
+
+  // 2) Essai depuis HTML avec DOMParser (pas de regex, pas de "</script>" dans le code)
+  const text = await res.text();
+  try {
+    const doc = new DOMParser().parseFromString(text, 'text/html');
+    const node = doc.querySelector('script[type="application/json"]');
+    if (node && node.textContent) {
+      const j = JSON.parse(node.textContent);
+      if (j && (Array.isArray(j) || typeof j === 'object')) return j;
     }
-    // Cherche le premier tableau JSON plausible
-    const arrayMatch = text.match(/\[\s*\{[\s\S]*\}\s*\]/);
-    if (arrayMatch){
-      return JSON.parse(arrayMatch[0]);
-    }
-    throw new Error("Impossible d’interpréter la réponse comme JSON.");
-  }
+  } catch (_) {}
+
+  // 3) Dernier recours : premier tableau JSON plausible trouvé dans le texte
+  const m = text.match(/\[\s*\{[\s\S]*?\}\s*\]/);
+  if (m) return JSON.parse(m[0]);
+
+  throw new Error("Impossible d’interpréter la réponse comme JSON.");
+}
 
   // Rendu
   function render(){
