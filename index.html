@@ -83,14 +83,14 @@
       <h2>1) Source de données</h2>
       <div class="controls">
         <input id="sourceUrl" type="text" value="https://resa.rocabella.fr/" />
-        <button id="btnFetch" class="btn-primary">Charger depuis l’URL</button>
+        <button id="btnFetch" class="btn-primary">Voir les indisponibilités</button>
         <button id="btnAuto" title="Recharge automatique toutes les 6 h">Activer l’auto-refresh</button>
         <span class="spacer"></span>
         <span id="statusBadge" class="badge">Aucune donnée</span>
       </div>
       <div id="messageArea"></div>
 
-      <h3 style="margin-top:14px">Collage manuel (secours)</h3>
+      <h3 style="margin-top:14px">Collage manuel (à ignorer)</h3>
       <p class="badge">Format : un objet par date, valeurs “Disponible/Indisponible”.</p>
       <textarea id="jsonInput" placeholder="Collez ici vos données JSON si l’URL n’est pas accessible…"></textarea>
       <div class="controls">
@@ -343,4 +343,5 @@
 </script>
 </body>
 </html>
+
 
