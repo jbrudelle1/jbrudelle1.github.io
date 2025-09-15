@@ -2,65 +2,72 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Rocabella · Calendrier d’indisponibilités</title>
 <style>
   :root{
     --bg:#0f1115; --panel:#171a21; --muted:#a6adbb; --text:#e7e9ee; --accent:#3b82f6;
-    --blue:#3b82f6;   /* La Folie */
-    --red:#ef4444;    /* La Corniche */
+    --blue:#3b82f6;   /* La Folie   */
+    --red:#ef4444;    /* La Corniche*/
     --green:#10b981;  /* La Bastide */
     --purple:#a855f7; /* Le Cottage */
-    --grid:#222733; --cell:#12151b; --chip:#202636; --chip-border:#2b3346;
+    --chip:#202636; --chip-b:#2b3346; --cell:#12151b; --cell-b:#222733;
   }
   *{box-sizing:border-box}
-  body{
-    margin:0; font-family:system-ui,-apple-system,Segoe UI,Inter,Roboto,Arial;
-    background:var(--bg); color:var(--text); line-height:1.45;
-  }
-  .wrap{max-width:1200px; margin:0 auto; padding:24px 16px 42px}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Inter,Roboto,Arial;background:var(--bg);color:var(--text);line-height:1.45}
+  .wrap{max-width:1200px;margin:0 auto;padding:24px 16px 42px}
   header h1{margin:0 0 6px}
-  header p{margin:0; color:var(--muted)}
-  .grid{display:grid; grid-template-columns:1.1fr .9fr; gap:18px; margin-top:20px}
+  header p{margin:0;color:var(--muted)}
+  .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;margin-top:20px}
   @media (max-width:980px){.grid{grid-template-columns:1fr}}
-  .card{background:var(--panel); border:1px solid #23293a; border-radius:16px; padding:16px; box-shadow:0 10px 30px rgba(0,0,0,.25)}
-  h2,h3{margin:0 0 10px; font-size:18px}
-  .row{display:flex; flex-wrap:wrap; gap:10px; align-items:center}
-  .controls{display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin:8px 0 12px}
+  .card{background:var(--panel);border:1px solid #23293a;border-radius:16px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+  h2,h3{margin:0 0 10px;font-size:18px}
+  .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:8px 0 12px}
   .controls .spacer{flex:1}
-  input[type="text"]{width:100%; max-width:560px; padding:8px 10px; border-radius:10px; border:1px solid #2c3448; background:#0e1118; color:var(--text)}
-  textarea{width:100%; min-height:160px; resize:vertical; border-radius:12px; border:1px solid #273049; background:#0e1118; color:var(--text); padding:12px; font-family:ui-monospace,Consolas,Menlo,monospace}
-  .badge{display:inline-flex; align-items:center; gap:6px; background:var(--chip); border:1px solid var(--chip-border); color:#c7cedd; border-radius:999px; padding:6px 10px; font-size:13px; font-weight:600}
-  button{background:#1f2534; color:var(--text); border:1px solid #2c3448; padding:8px 12px; border-radius:10px; cursor:pointer; font-weight:600}
+  input[type="text"]{width:100%;max-width:560px;padding:8px 10px;border-radius:10px;border:1px solid #2c3448;background:#0e1118;color:var(--text)}
+  textarea{width:100%;min-height:160px;resize:vertical;border-radius:12px;border:1px solid #273049;background:#0e1118;color:var(--text);padding:12px;font-family:ui-monospace,Consolas,Menlo,monospace}
+  button{background:#1f2534;color:var(--text);border:1px solid #2c3448;padding:8px 12px;border-radius:12px;cursor:pointer;font-weight:700}
   button:hover{background:#232a3c}
-  .btn-primary{background:var(--accent); border-color:var(--accent); color:#fff}
-  .btn-danger{background:#2a1b1b; border-color:#522; color:#ffb4b4}
-  .filters,.legend{display:flex; flex-wrap:wrap; gap:10px}
-  .filters .item,.legend .item{display:flex; align-items:center; gap:8px; background:#111421; border:1px solid #22293b; padding:6px 9px; border-radius:999px}
-  .dot{width:10px; height:10px; border-radius:50%}
+  .btn-primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn-danger{background:#2a1b1b;border-color:#522;color:#ffb4b4}
+  .badge{display:inline-flex;align-items:center;gap:6px;background:var(--chip);border:1px solid var(--chip-b);color:#c7cedd;border-radius:999px;padding:8px 14px;font-size:14px;font-weight:700}
+  .filters,.legend{display:flex;flex-wrap:wrap;gap:10px}
+  .filters label,.legend .item{display:flex;align-items:center;gap:8px;background:#111421;border:1px solid #22293b;padding:6px 9px;border-radius:999px}
+  .dot{width:10px;height:10px;border-radius:50%}
   .blue{background:var(--blue)} .red{background:var(--red)} .green{background:var(--green)} .purple{background:var(--purple)}
-  .msg{margin-top:8px; padding:10px 12px; border-radius:10px; font-weight:600; font-size:14px}
-  .ok{background:#0f1a14; color:#9fefc0; border:1px solid #1d3e2f}
-  .err{background:#241517; color:#ffb4b4; border:1px solid #4d2328}
+  .msg{margin-top:8px;padding:10px 12px;border-radius:10px;font-weight:600;font-size:14px}
+  .ok{background:#0f1a14;color:#9fefc0;border:1px solid #1d3e2f}
+  .err{background:#241517;color:#ffb4b4;border:1px solid #4d2328}
 
-  .calendar{background:var(--panel); border:1px solid #23293a; border-radius:16px; padding:10px}
-  .dow{display:grid; grid-template-columns:repeat(7,1fr); gap:4px; padding:0 8px 6px; color:#9ca3af; font-weight:700; font-size:12px}
-  .month-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:4px; padding:8px; background:#0e121b; border-radius:12px}
-  .cell{background:#12151b; border:1px solid #222733; border-radius:10px; min-height:80px; padding:6px; display:flex; flex-direction:column; gap:6px}
+  /* --- Conteneur calendrier, comme la capture --- */
+  .cal-wrap{background:var(--panel);border:1px solid #23293a;border-radius:18px;padding:20px}
+  .cal-toolbar{display:flex;align-items:center;gap:12px;margin:0 0 14px}
+  .cal-toolbar .btn-round{width:44px;height:44px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;font-size:18px}
+  .cal-toolbar .title{margin-left:8px;margin-right:auto}
+  .title .badge{font-size:16px;padding:10px 16px}
+
+  .dow{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;padding:10px;border-radius:14px;background:#0f131c}
+  .dow div{color:#9ca3af;font-weight:800;text-align:center;font-size:14px}
+
+  .month-outer{background:#0f131c;border-radius:16px;padding:14px}
+  .month-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:10px}
+  .cell{background:var(--cell);border:1px solid var(--cell-b);border-radius:14px;min-height:120px;padding:8px;display:flex;flex-direction:column;gap:8px}
   .cell.muted{opacity:.45}
-  .daynum{font-size:12px; color:#94a3b8; font-weight:700}
-  .dots{display:flex; gap:6px; flex-wrap:wrap; margin-top:2px}
-  .dots .dot{box-shadow:0 0 0 2px #0b0f17 inset}
-
-  .year-wrap{display:grid; grid-template-columns:repeat(4,1fr); gap:12px}
+  .daynum{font-size:14px;color:#a9b2c2;font-weight:800}
+  .dots{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+  .dots .dot{width:10px;height:10px;border-radius:50%;box-shadow:0 0 0 2px #0b0f17 inset}
+  @media (max-width:650px){.cell{min-height:90px}}
+  /* vue annuelle conservée */
+  .year-wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
   @media (max-width:1100px){.year-wrap{grid-template-columns:repeat(3,1fr)}}
   @media (max-width:820px){.year-wrap{grid-template-columns:repeat(2,1fr)}}
   @media (max-width:560px){.year-wrap{grid-template-columns:1fr}}
-  .mini{background:#0e121b; border:1px solid #23293a; border-radius:14px; padding:8px}
-  .mini h4{margin:0 0 6px; font-size:14px; color:#cdd3df}
-  .mini .cell{min-height:42px; padding:4px}
+  .mini{background:#0e121b;border:1px solid #23293a;border-radius:14px;padding:8px}
+  .mini h4{margin:0 0 6px;font-size:14px;color:#cdd3df}
+  .mini .cell{min-height:42px;padding:4px}
   .mini .daynum{font-size:11px}
-  .mini .dots .dot{width:8px; height:8px}
+  .mini .dots .dot{width:8px;height:8px}
 </style>
 </head>
 <body>
@@ -71,7 +78,7 @@
   </header>
 
   <div class="grid">
-    <!-- Colonne gauche : Source + Filtres -->
+    <!-- Colonne gauche -->
     <section class="card">
       <h2>1) Source de données</h2>
       <div class="controls">
@@ -84,7 +91,7 @@
       <div id="messageArea"></div>
 
       <h3 style="margin-top:14px">Collage manuel (secours)</h3>
-      <p class="badge">Format attendu : un objet par date, statuts “Disponible/Indisponible”.</p>
+      <p class="badge">Format : un objet par date, valeurs “Disponible/Indisponible”.</p>
       <textarea id="jsonInput" placeholder="Collez ici vos données JSON si l’URL n’est pas accessible…"></textarea>
       <div class="controls">
         <button id="btnApply">Appliquer le JSON collé</button>
@@ -95,10 +102,10 @@
       <h3>Filtres et légende</h3>
       <div class="row" style="gap:16px">
         <div class="filters" id="filters">
-          <label class="item"><input type="checkbox" data-prop="La Folie" checked /> La Folie</label>
-          <label class="item"><input type="checkbox" data-prop="La Corniche" checked /> La Corniche</label>
-          <label class="item"><input type="checkbox" data-prop="La Bastide" checked /> La Bastide</label>
-          <label class="item"><input type="checkbox" data-prop="Le Cottage" checked /> Le Cottage</label>
+          <label><input type="checkbox" data-prop="La Folie" checked /> La Folie</label>
+          <label><input type="checkbox" data-prop="La Corniche" checked /> La Corniche</label>
+          <label><input type="checkbox" data-prop="La Bastide" checked /> La Bastide</label>
+          <label><input type="checkbox" data-prop="Le Cottage" checked /> Le Cottage</label>
         </div>
         <div class="legend">
           <span class="item"><span class="dot blue"></span> La Folie</span>
@@ -109,22 +116,29 @@
       </div>
     </section>
 
-    <!-- Colonne droite : Calendrier -->
+    <!-- Colonne droite -->
     <section class="card">
       <h2>2) Calendrier</h2>
-      <div class="controls">
-        <div class="row" role="group">
-          <button id="btnMonthly">Vue Mensuelle</button>
-          <button id="btnYearly">Vue Annuelle</button>
+
+      <!-- Barre d’actions (boutons + libellé central + flèches) -->
+      <div class="cal-toolbar">
+        <button id="btnMonthly">Vue Mensuelle</button>
+        <button id="btnYearly">Vue Annuelle</button>
+        <span class="title"><span class="badge" id="periodLabel">—</span></span>
+        <button id="btnPrev" class="btn-round">◀</button>
+        <button id="btnNext" class="btn-round">▶</button>
+      </div>
+
+      <!-- Conteneur style « bloc » comme la capture -->
+      <div class="cal-wrap">
+        <!-- En-têtes jours (barre sombre arrondie) -->
+        <div class="dow" aria-hidden="true">
+          <div>Lun</div><div>Mar</div><div>Mer</div><div>Jeu</div><div>Ven</div><div>Sam</div><div>Dim</div>
         </div>
-        <span class="spacer"></span>
-        <div class="row">
-          <button id="btnPrev">◀</button>
-          <div class="badge" id="periodLabel">—</div>
-          <button id="btnNext">▶</button>
+        <div class="month-outer">
+          <div id="calendarArea" class="month-grid"></div>
         </div>
       </div>
-      <div class="calendar"><div id="calendarArea"></div></div>
     </section>
   </div>
 </div>
@@ -133,248 +147,198 @@
 (function(){
   "use strict";
 
-  // Propriétés et couleurs
-  const PROPS = ["La Folie","La Corniche","La Bastide","Le Cottage"];
+  const PROPS  = ["La Folie","La Corniche","La Bastide","Le Cottage"];
   const COLORS = {"La Folie":"blue","La Corniche":"red","La Bastide":"green","Le Cottage":"purple"};
-
-  // État
   let viewMode = "month";
-  let current = new Date(); current.setHours(0,0,0,0);
-  let dataMap = new Map();             // "YYYY-MM-DD" -> {prop: "Disponible|Indisponible"}
+  let current  = new Date(); current.setHours(0,0,0,0);
+  let dataMap  = new Map();
   let enabledProps = new Set(PROPS);
   let autoTimer = null;
 
-  // Utilitaires DOM et dates (UTC pour stabilité)
-  const $ = s => document.querySelector(s);
+  const $  = s => document.querySelector(s);
   const el = (t,c,txt)=>{const n=document.createElement(t); if(c)n.className=c; if(txt!=null)n.textContent=txt; return n;};
   const MONTHS = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
-  const DOW = ["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"];
-  const toKey = d => {const y=d.getUTCFullYear(), m=String(d.getUTCMonth()+1).padStart(2,"0"), da=String(d.getUTCDate()).padStart(2,"0"); return `${y}-${m}-${da}`;};
-  const fromISO = iso => { const d = new Date(iso + "T00:00:00Z"); return Number.isNaN(d.getTime())?null:d; };
-  const daysInMonth = (y,m)=> new Date(Date.UTC(y,m+1,0)).getUTCDate();
-  const startOfMonth = d => new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1));
-  const addMonths = (d,n)=> new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth()+n, 1));
-  const addYears = (d,n)=> new Date(Date.UTC(d.getUTCFullYear()+n, d.getUTCMonth(), 1));
-  const weekDay = d => (new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate())).getUTCDay()+6)%7; // Lundi=0
 
-  function msg(type, text){
-    const area = $("#messageArea"); area.innerHTML="";
+  const toKey     = d => `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,"0")}-${String(d.getUTCDate()).padStart(2,"0")}`;
+  const fromISO   = iso => { const d = new Date(iso+"T00:00:00Z"); return Number.isNaN(d.getTime())?null:d; };
+  const daysInMon = (y,m)=> new Date(Date.UTC(y,m+1,0)).getUTCDate();
+  const startMon  = d => new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1));
+  const addMonths = (d,n)=> new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth()+n, 1));
+  const addYears  = (d,n)=> new Date(Date.UTC(d.getUTCFullYear()+n, d.getUTCMonth(), 1));
+  const weekDay   = d => (new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate())).getUTCDay()+6)%7; // Lun=0
+
+  function msg(type,text){
+    const area=$("#messageArea"); area.innerHTML="";
     if(!text) return;
-    const node = el("div", "msg " + (type==="error"?"err":"ok"), text);
-    area.appendChild(node);
+    area.appendChild(el("div","msg "+(type==="error"?"err":"ok"),text));
   }
   function updateBadge(){
-    const b = $("#statusBadge");
-    if (dataMap.size===0){ b.textContent="Aucune donnée"; return; }
-    const keys = [...dataMap.keys()].sort();
-    const [y1,m1,d1]=keys[0].split("-"); const [y2,m2,d2]=keys.at(-1).split("-");
-    b.textContent = `Données: ${d1}/${m1}/${y1} → ${d2}/${m2}/${y2} (${dataMap.size} jours)`;
+    const b=$("#statusBadge");
+    if(dataMap.size===0){b.textContent="Aucune donnée";return;}
+    const keys=[...dataMap.keys()].sort();
+    const [y1,m1,d1]=keys[0].split("-"), [y2,m2,d2]=keys.at(-1).split("-");
+    b.textContent=`Données: ${d1}/${m1}/${y1} → ${d2}/${m2}/${y2} (${dataMap.size} jours)`;
   }
 
-  // Normalisation des données (par date, défaut = Disponible)
   function loadData(json){
     dataMap.clear();
-    const arr = Array.isArray(json)? json : [json];
-    for (const obj of arr){
-      if (!obj || typeof obj!=="object") continue;
-      const d = fromISO(obj.date); if(!d) continue;
-      const key = toKey(d);
-      const entry = {};
-      for (const p of PROPS){
-        const raw = (obj[p]??"Disponible").toString().trim().toLowerCase();
-        entry[p] = raw==="indisponible" ? "Indisponible" : "Disponible";
+    const arr=Array.isArray(json)?json:[json];
+    for(const obj of arr){
+      if(!obj||typeof obj!=="object") continue;
+      const d=fromISO(obj.date); if(!d) continue;
+      const key=toKey(d);
+      const entry={};
+      for(const p of PROPS){
+        const raw=(obj[p]??"Disponible").toString().trim().toLowerCase();
+        entry[p]= raw==="indisponible" ? "Indisponible" : "Disponible";
       }
-      dataMap.set(key, entry);
+      dataMap.set(key,entry);
     }
     updateBadge(); render(); msg("ok","Données chargées.");
   }
 
-  // Fetch distant sécurisé (JSON direct, ou HTML + DOMParser, puis secours)
   async function fetchAndParse(url){
-    const res = await fetch(url, {
-      headers: { 'Accept': 'application/json,text/plain;q=0.9,*/*;q=0.8' }
-    });
-
-    // 1) Essai JSON direct
-    try {
-      const j = await res.clone().json();
-      if (j && (Array.isArray(j) || typeof j === 'object')) return j;
-    } catch (_) {}
-
-    // 2) Essai via DOMParser sur une page HTML pour trouver un <script type="application/json">
-    const text = await res.text();
-    try {
-      const doc = new DOMParser().parseFromString(text, 'text/html');
-      const node = doc.querySelector('script[type="application/json"]');
-      if (node && node.textContent) {
-        const j = JSON.parse(node.textContent);
-        if (j && (Array.isArray(j) || typeof j === 'object')) return j;
+    const res = await fetch(url,{headers:{'Accept':'application/json,text/plain;q=0.9,*/*;q=0.8'}});
+    try{
+      const j=await res.clone().json();
+      if(j && (Array.isArray(j)||typeof j==="object")) return j;
+    }catch(_){}
+    const text=await res.text();
+    try{
+      const doc=new DOMParser().parseFromString(text,"text/html");
+      const node=doc.querySelector('script[type="application/json"]');
+      if(node && node.textContent){
+        const j=JSON.parse(node.textContent);
+        if(j && (Array.isArray(j)||typeof j==="object")) return j;
       }
-    } catch (_) {}
-
-    // 3) Secours : premier tableau JSON plausible dans le texte
-    const m = text.match(/\[\s*\{[\s\S]*?\}\s*\]/);
-    if (m) return JSON.parse(m[0]);
-
+    }catch(_){}
+    const m=text.match(/\[\s*\{[\s\S]*?\}\s*\]/);
+    if(m) return JSON.parse(m[0]);
     throw new Error("Impossible d’interpréter la réponse comme JSON.");
   }
 
-  // Rendu
+  /* ---------- Rendu MENSUEL = comme la capture ---------- */
   function render(){
-    if (viewMode==="month") renderMonth(); else renderYear();
+    if(viewMode==="month") renderMonth(); else renderYear();
   }
-
   function renderMonth(){
-    const area = $("#calendarArea"); area.innerHTML="";
-    const y = current.getUTCFullYear(), m=current.getUTCMonth();
+    const area=$("#calendarArea"); area.innerHTML="";
+    const y=current.getUTCFullYear(), m=current.getUTCMonth();
     $("#periodLabel").textContent = `${MONTHS[m]} ${y}`;
 
-    const header = el("div","dow");
-    for(const d of DOW) header.appendChild(el("div",null,d));
-    const grid = el("div","month-grid");
-
-    const first = startOfMonth(current);
+    const first = startMon(current);
     const firstDow = weekDay(first);
-    const total = daysInMonth(y,m);
+    const total = daysInMon(y,m);
 
-    for(let i=0;i<firstDow;i++) grid.appendChild(el("div","cell muted"));
+    // cases muettes avant le 1er du mois
+    for(let i=0;i<firstDow;i++) area.appendChild(el("div","cell muted"));
+
+    // jours du mois
     for(let day=1; day<=total; day++){
       const cell = el("div","cell");
       cell.appendChild(el("div","daynum", String(day)));
 
-      const key = toKey(new Date(Date.UTC(y,m,day)));
-      const entry = dataMap.get(key);
+      const k = toKey(new Date(Date.UTC(y,m,day)));
+      const entry = dataMap.get(k);
       const dots = el("div","dots");
 
-      if (entry){
-        for (const p of PROPS){
-          if (!enabledProps.has(p)) continue;
-          if (entry[p]==="Indisponible"){
-            const dot = el("span","dot "+COLORS[p]); dot.title = p + " indisponible";
-            dots.appendChild(dot);
-          }
+      if(entry){
+        // ordre des pastilles : bleu, rouge, vert, violet
+        const order=["La Folie","La Corniche","La Bastide","Le Cottage"];
+        for(const p of order){
+          if(!enabledProps.has(p)) continue;
+          if(entry[p]==="Indisponible") dots.appendChild(el("span","dot "+COLORS[p]));
         }
       }
       cell.appendChild(dots);
-      grid.appendChild(cell);
+      area.appendChild(cell);
     }
-    const rem = (firstDow+total)%7; if (rem!==0) for(let i=rem;i<7;i++) grid.appendChild(el("div","cell muted"));
-    area.appendChild(header); area.appendChild(grid);
+
+    // cases muettes pour compléter la dernière ligne
+    const rem=(firstDow+total)%7; if(rem!==0){for(let i=rem;i<7;i++) area.appendChild(el("div","cell muted")); }
   }
 
+  /* ---------- Rendu ANNUEL (inchangé) ---------- */
   function renderYear(){
-    const area = $("#calendarArea"); area.innerHTML = "";
-    const y = current.getUTCFullYear();
-    $("#periodLabel").textContent = `Année ${y}`;
-
-    const wrap = el("div","year-wrap");
+    const area=$("#calendarArea"); area.innerHTML="";
+    const y=current.getUTCFullYear(); $("#periodLabel").textContent=`Année ${y}`;
+    const wrap=document.createElement("div"); wrap.className="year-wrap";
     for(let m=0;m<12;m++){
-      const sec = el("div","mini");
-      sec.appendChild(el("h4",null,`${MONTHS[m]} ${y}`));
-
-      const header = el("div","dow");
-      for(const d of DOW) header.appendChild(el("div",null,d));
-      header.style.padding="0 0 6px 0";
-      sec.appendChild(header);
-
-      const grid = el("div","month-grid");
-      const first = new Date(Date.UTC(y,m,1));
-      const firstDow = weekDay(first);
-      const total = daysInMonth(y,m);
+      const sec=el("div","mini"); sec.appendChild(el("h4",null,`${MONTHS[m]} ${y}`));
+      const grid=el("div","month-grid");
+      const first=new Date(Date.UTC(y,m,1));
+      const firstDow=weekDay(first);
+      const total=daysInMon(y,m);
 
       for(let i=0;i<firstDow;i++) grid.appendChild(el("div","cell muted"));
-      for(let day=1; day<=total; day++){
-        const cell = el("div","cell");
-        cell.appendChild(el("div","daynum", String(day)));
-
-        const key = toKey(new Date(Date.UTC(y,m,day)));
-        const entry = dataMap.get(key);
-        const dots = el("div","dots");
-
-        if (entry){
-          for (const p of PROPS){
-            if (!enabledProps.has(p)) continue;
-            if (entry[p]==="Indisponible") dots.appendChild(el("span","dot "+COLORS[p]));
-          }
+      for(let d=1; d<=total; d++){
+        const c=el("div","cell"); c.appendChild(el("div","daynum",String(d)));
+        const k=toKey(new Date(Date.UTC(y,m,d))); const e=dataMap.get(k); const dots=el("div","dots");
+        if(e){
+          const order=["La Folie","La Corniche","La Bastide","Le Cottage"];
+          for(const p of order){ if(enabledProps.has(p)&&e[p]==="Indisponible") dots.appendChild(el("span","dot "+COLORS[p])); }
         }
-        cell.appendChild(dots);
-        grid.appendChild(cell);
+        c.appendChild(dots); grid.appendChild(c);
       }
-      const rem = (firstDow+total)%7; if (rem!==0) for(let i=rem;i<7;i++) grid.appendChild(el("div","cell muted"));
-      sec.appendChild(grid);
-      wrap.appendChild(sec);
+      const rem=(firstDow+total)%7; if(rem!==0) for(let i=rem;i<7;i++) grid.appendChild(el("div","cell muted"));
+      sec.appendChild(grid); wrap.appendChild(sec);
     }
     area.appendChild(wrap);
   }
 
-  // Événements UI
-  $("#btnMonthly").addEventListener("click",()=>{viewMode="month"; render();});
-  $("#btnYearly").addEventListener("click",()=>{viewMode="year"; render();});
-  $("#btnPrev").addEventListener("click",()=>{current = viewMode==="month"? addMonths(current,-1): addYears(current,-1); render();});
-  $("#btnNext").addEventListener("click",()=>{current = viewMode==="month"? addMonths(current, 1): addYears(current, 1); render();});
-
+  /* ---------- Interactions ---------- */
+  $("#btnMonthly").addEventListener("click",()=>{viewMode="month";render();});
+  $("#btnYearly").addEventListener("click",()=>{viewMode="year";render();});
+  $("#btnPrev").addEventListener("click",()=>{current=viewMode==="month"?addMonths(current,-1):addYears(current,-1);render();});
+  $("#btnNext").addEventListener("click",()=>{current=viewMode==="month"?addMonths(current, 1):addYears(current, 1);render();});
   document.querySelectorAll('#filters input[type="checkbox"]').forEach(cb=>{
-    cb.addEventListener("change",()=>{
-      const prop = cb.getAttribute("data-prop");
-      if (cb.checked) enabledProps.add(prop); else enabledProps.delete(prop);
-      render();
-    });
+    cb.addEventListener("change",()=>{const p=cb.getAttribute("data-prop"); if(cb.checked) enabledProps.add(p); else enabledProps.delete(p); render();});
   });
 
-  // Collage manuel
   $("#btnApply").addEventListener("click",()=>{
-    const raw = $("#jsonInput").value.trim();
-    if(!raw){ dataMap.clear(); updateBadge(); render(); msg("ok","Données effacées."); return; }
-    try{
-      const parsed = JSON.parse(raw);
-      loadData(parsed);
-    }catch(e){ msg("error","JSON invalide : " + e.message); }
+    const raw=$("#jsonInput").value.trim();
+    if(!raw){dataMap.clear();updateBadge();render();msg("ok","Données effacées.");return;}
+    try{ loadData(JSON.parse(raw)); }catch(e){ msg("error","JSON invalide : "+e.message); }
   });
-
-  $("#btnClear").addEventListener("click",()=>{
-    $("#jsonInput").value=""; dataMap.clear(); updateBadge(); render(); msg("ok","Données effacées.");
-  });
-
+  $("#btnClear").addEventListener("click",()=>{ $("#jsonInput").value=""; dataMap.clear(); updateBadge(); render(); msg("ok","Données effacées."); });
   $("#btnSample").addEventListener("click",()=>{
     const sample=[
-      {"date":"2025-09-18","La Folie":"Disponible","La Corniche":"Indisponible","La Bastide":"Disponible","Le Cottage":"Disponible"},
-      {"date":"2025-09-19","La Folie":"Disponible","La Corniche":"Indisponible","La Bastide":"Disponible","Le Cottage":"Disponible"},
-      {"date":"2025-09-20","La Folie":"Disponible","La Corniche":"Indisponible","La Bastide":"Indisponible","Le Cottage":"Disponible"},
-      {"date":"2025-10-03","La Folie":"Indisponible","La Corniche":"Disponible","La Bastide":"Disponible","Le Cottage":"Disponible"},
-      {"date":"2025-12-24","La Folie":"Indisponible","La Corniche":"Indisponible","La Bastide":"Disponible","Le Cottage":"Disponible"},
-      {"date":"2026-01-02","La Folie":"Disponible","La Corniche":"Disponible","La Bastide":"Indisponible","Le Cottage":"Disponible"}
+      {"date":"2025-09-14","La Folie":"Indisponible","La Corniche":"Indisponible","La Bastide":"Disponible","Le Cottage":"Indisponible"},
+      {"date":"2025-09-16","La Folie":"Disponible","La Corniche":"Indisponible","La Bastide":"Disponible","Le Cottage":"Indisponible"},
+      {"date":"2025-09-17","La Folie":"Disponible","La Corniche":"Disponible","La Bastide":"Indisponible","Le Cottage":"Indisponible"},
+      {"date":"2025-09-18","La Folie":"Indisponible","La Corniche":"Indisponible","La Bastide":"Indisponible","Le Cottage":"Indisponible"},
+      {"date":"2025-09-19","La Folie":"Indisponible","La Corniche":"Indisponible","La Bastide":"Disponible","Le Cottage":"Disponible"},
+      {"date":"2025-09-20","La Folie":"Disponible","La Corniche":"Disponible","La Bastide":"Indisponible","Le Cottage":"Disponible"},
+      {"date":"2025-09-23","La Folie":"Disponible","La Corniche":"Indisponible","La Bastide":"Disponible","Le Cottage":"Indisponible"},
+      {"date":"2025-09-24","La Folie":"Indisponible","La Corniche":"Disponible","La Bastide":"Indisponible","Le Cottage":"Disponible"},
+      {"date":"2025-09-25","La Folie":"Disponible","La Corniche":"Indisponible","La Bastide":"Disponible","Le Cottage":"Indisponible"},
+      {"date":"2025-09-26","La Folie":"Disponible","La Corniche":"Disponible","La Bastide":"Disponible","Le Cottage":"Indisponible"},
+      {"date":"2025-09-27","La Folie":"Indisponible","La Corniche":"Indisponible","La Bastide":"Disponible","Le Cottage":"Indisponible"},
+      {"date":"2025-09-28","La Folie":"Disponible","La Corniche":"Disponible","La Bastide":"Disponible","Le Cottage":"Indisponible"},
+      {"date":"2025-09-29","La Folie":"Indisponible","La Corniche":"Disponible","La Bastide":"Disponible","Le Cottage":"Disponible"},
+      {"date":"2025-09-30","La Folie":"Disponible","La Corniche":"Indisponible","La Bastide":"Disponible","Le Cottage":"Disponible"}
     ];
-    $("#jsonInput").value = JSON.stringify(sample,null,2);
-    msg(null,"");
+    $("#jsonInput").value=JSON.stringify(sample,null,2); msg(null,"");
   });
 
-  // Chargement distant
   async function fetchFromUrl(){
-    const url = $("#sourceUrl").value.trim();
-    if(!url){ msg("error","Veuillez saisir une URL."); return; }
+    const url=$("#sourceUrl").value.trim(); if(!url){msg("error","Veuillez saisir une URL.");return;}
     msg(null,"");
     try{
-      const payload = await fetchAndParse(url);
-      if (Array.isArray(payload) || typeof payload==="object"){ loadData(payload); }
+      const payload=await fetchAndParse(url);
+      if(Array.isArray(payload)||typeof payload==="object") loadData(payload);
       else throw new Error("Réponse inattendue.");
-    }catch(e){
-      console.error(e);
-      msg("error","Échec du chargement depuis l’URL : " + e.message + ". Si la ressource est sur un autre domaine sans CORS, activez CORS côté serveur ou utilisez le collage manuel.");
-    }
+    }catch(e){console.error(e);msg("error","Échec du chargement depuis l’URL : "+e.message);}
   }
-  $("#btnFetch").addEventListener("click", fetchFromUrl);
+  $("#btnFetch").addEventListener("click",fetchFromUrl);
 
-  // Auto-refresh
-  $("#btnAuto").addEventListener("click", ()=>{
-    if (autoTimer){ clearInterval(autoTimer); autoTimer=null; $("#btnAuto").textContent="Activer l’auto-refresh"; msg("ok","Auto-refresh désactivé."); return; }
-    autoTimer = setInterval(fetchFromUrl, 6*60*60*1000);
-    $("#btnAuto").textContent="Désactiver l’auto-refresh";
-    fetchFromUrl();
+  $("#btnAuto").addEventListener("click",()=>{
+    if(autoTimer){clearInterval(autoTimer);autoTimer=null;$("#btnAuto").textContent="Activer l’auto-refresh";msg("ok","Auto-refresh désactivé.");return;}
+    autoTimer=setInterval(fetchFromUrl,6*60*60*1000); $("#btnAuto").textContent="Désactiver l’auto-refresh"; fetchFromUrl();
   });
 
-  // Initial
+  // initial
   render(); updateBadge();
-
 })();
 </script>
 </body>
