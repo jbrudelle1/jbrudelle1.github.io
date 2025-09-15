@@ -2,66 +2,65 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Rocabella · Calendrier d’indisponibilités (auto-fetch)</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Rocabella – Calendrier d’indisponibilités</title>
 <style>
   :root{
     --bg:#0f1115; --panel:#171a21; --muted:#a6adbb; --text:#e7e9ee; --accent:#3b82f6;
     --blue:#3b82f6; --red:#ef4444; --green:#10b981; --purple:#a855f7;
-    --grid:#222733; --cell:#12151b; --chip:#202636; --chip-border:#2b3346;
+    --grid:#222733; --cell:#12151b;
   }
   *{box-sizing:border-box}
-  body{margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Ubuntu,"Helvetica Neue",Arial;
-       background:var(--bg); color:var(--text); line-height:1.45}
-  .wrap{max-width:1200px; margin:0 auto; padding:24px 16px 42px}
-  header h1{margin:0 0 6px}
-  header p{margin:0; color:var(--muted)}
-  .grid{display:grid; grid-template-columns:1.1fr .9fr; gap:18px; margin-top:20px}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Inter,Roboto,Arial;background:var(--bg);color:var(--text);line-height:1.45}
+  .wrap{max-width:1200px;margin:0 auto;padding:24px 16px 42px}
+  h1{margin:0 0 6px}
+  header p{margin:0;color:var(--muted)}
+  .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;margin-top:20px}
   @media (max-width:980px){.grid{grid-template-columns:1fr}}
-  .card{background:var(--panel); border:1px solid #23293a; border-radius:16px; padding:16px; box-shadow:0 10px 30px rgba(0,0,0,.25)}
-  h2,h3{margin:0 0 10px; font-size:18px}
-  .row{display:flex; flex-wrap:wrap; gap:10px; align-items:center}
-  .controls{display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin:8px 0 12px}
+  .card{background:var(--panel);border:1px solid #23293a;border-radius:16px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+  h2,h3{margin:0 0 10px;font-size:18px}
+  .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:8px 0 12px}
   .controls .spacer{flex:1}
-  input[type="text"]{width:100%; max-width:560px; padding:8px 10px; border-radius:10px; border:1px solid #2c3448; background:#0e1118; color:var(--text)}
-  textarea{width:100%; min-height:160px; resize:vertical; border-radius:12px; border:1px solid #273049; background:#0e1118; color:var(--text); padding:12px; font-family:ui-monospace,Consolas,Menlo,monospace}
-  .badge{display:inline-flex; align-items:center; gap:6px; background:#202636; border:1px solid #2b3346; color:#c7cedd; border-radius:999px; padding:6px 10px; font-size:13px; font-weight:600}
-  button{background:#1f2534; color:var(--text); border:1px solid #2c3448; padding:8px 12px; border-radius:10px; cursor:pointer; font-weight:600}
+  input[type="text"]{width:100%;max-width:560px;padding:8px 10px;border-radius:10px;border:1px solid #2c3448;background:#0e1118;color:var(--text)}
+  textarea{width:100%;min-height:160px;resize:vertical;border-radius:12px;border:1px solid #273049;background:#0e1118;color:var(--text);padding:12px;font-family:ui-monospace,Consolas,Menlo,monospace}
+  .badge{display:inline-flex;align-items:center;gap:6px;background:#202636;border:1px solid #2b3346;color:#c7cedd;border-radius:999px;padding:6px 10px;font-size:13px;font-weight:600}
+  button{background:#1f2534;color:var(--text);border:1px solid #2c3448;padding:8px 12px;border-radius:10px;cursor:pointer;font-weight:600}
   button:hover{background:#232a3c}
-  .btn-primary{background:var(--accent); border-color:var(--accent); color:#fff}
-  .btn-danger{background:#2a1b1b; border-color:#522; color:#ffb4b4}
-  .filters,.legend{display:flex; flex-wrap:wrap; gap:10px}
-  .filters .item,.legend .item{display:flex; align-items:center; gap:8px; background:#111421; border:1px solid #22293b; padding:6px 9px; border-radius:999px}
-  .dot{width:10px; height:10px; border-radius:50%}
-  .blue{background:#3b82f6} .red{background:#ef4444} .green{background:#10b981} .purple{background:#a855f7}
-  .msg{margin-top:8px; padding:10px 12px; border-radius:10px; font-weight:600; font-size:14px}
-  .ok{background:#0f1a14; color:#9fefc0; border:1px solid #1d3e2f}
-  .err{background:#241517; color:#ffb4b4; border:1px solid #4d2328}
-  .calendar-header{display:flex; align-items:center; gap:10px; margin-bottom:10px}
-  .calendar{background:var(--panel); border:1px solid #23293a; border-radius:16px; padding:10px}
-  .dow{display:grid; grid-template-columns:repeat(7,1fr); gap:4px; padding:0 8px 6px; color:#9ca3af; font-weight:700; font-size:12px}
-  .month-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:4px; padding:8px; background:#0e121b; border-radius:12px}
-  .cell{background:#12151b; border:1px solid #222733; border-radius:10px; min-height:80px; padding:6px; display:flex; flex-direction:column; gap:6px}
+  .btn-primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn-danger{background:#2a1b1b;border-color:#522;color:#ffb4b4}
+  .filters,.legend{display:flex;flex-wrap:wrap;gap:10px}
+  .filters label,.legend .item{display:flex;align-items:center;gap:8px;background:#111421;border:1px solid #22293b;padding:6px 9px;border-radius:999px}
+  .dot{width:10px;height:10px;border-radius:50%}
+  .blue{background:#3b82f6}.red{background:#ef4444}.green{background:#10b981}.purple{background:#a855f7}
+  .msg{margin-top:8px;padding:10px 12px;border-radius:10px;font-weight:600;font-size:14px}
+  .ok{background:#0f1a14;color:#9fefc0;border:1px solid #1d3e2f}
+  .err{background:#241517;color:#ffb4b4;border:1px solid #4d2328}
+  .calendar-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .calendar{background:var(--panel);border:1px solid #23293a;border-radius:16px;padding:10px}
+  .dow{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:0 8px 6px;color:#9ca3af;font-weight:700;font-size:12px}
+  .month-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:8px;background:#0e121b;border-radius:12px}
+  .cell{background:#12151b;border:1px solid #222733;border-radius:10px;min-height:80px;padding:6px;display:flex;flex-direction:column;gap:6px}
   .cell.muted{opacity:.45}
-  .daynum{font-size:12px; color:#94a3b8; font-weight:700}
-  .dots{display:flex; gap:6px; flex-wrap:wrap; margin-top:2px}
+  .daynum{font-size:12px;color:#94a3b8;font-weight:700}
+  .dots{display:flex;gap:6px;flex-wrap:wrap;margin-top:2px}
   .dots .dot{box-shadow:0 0 0 2px #0b0f17 inset}
-  .year-wrap{display:grid; grid-template-columns:repeat(4,1fr); gap:12px}
+  .year-wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
   @media (max-width:1100px){.year-wrap{grid-template-columns:repeat(3,1fr)}}
   @media (max-width:820px){.year-wrap{grid-template-columns:repeat(2,1fr)}}
   @media (max-width:560px){.year-wrap{grid-template-columns:1fr}}
-  .mini{background:#0e121b; border:1px solid #23293a; border-radius:14px; padding:8px}
-  .mini h4{margin:0 0 6px; font-size:14px; color:#cdd3df}
-  .mini .cell{min-height:42px; padding:4px}
+  .mini{background:#0e121b;border:1px solid #23293a;border-radius:14px;padding:8px}
+  .mini h4{margin:0 0 6px;font-size:14px;color:#cdd3df}
+  .mini .cell{min-height:42px;padding:4px}
   .mini .daynum{font-size:11px}
-  .mini .dots .dot{width:8px; height:8px}
+  .mini .dots .dot{width:8px;height:8px}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
     <h1>Calendrier d’indisponibilités – Rocabella</h1>
-    <p>Source distante JSON, avec repli sur collage manuel si nécessaire.</p>
+    <p>Lecture de données JSON distantes, avec repli sur collage manuel si nécessaire.</p>
   </header>
 
   <div class="grid">
@@ -70,15 +69,15 @@
       <div class="controls">
         <input id="sourceUrl" type="text" value="https://resa.rocabella.fr/" />
         <button id="btnFetch" class="btn-primary">Charger depuis l’URL</button>
-        <button id="btnAuto" title="Recharge auto toutes les 6 h">Activer l’auto-refresh</button>
+        <button id="btnAuto" title="Recharge automatique toutes les 6 h">Activer l’auto-refresh</button>
         <span class="spacer"></span>
         <span id="statusBadge" class="badge">Aucune donnée</span>
       </div>
       <div id="messageArea"></div>
 
       <h3 style="margin-top:14px">Collage manuel (secours)</h3>
-      <p class="badge">Le format attendu est un objet par date avec “Disponible/Indisponible”.</p>
-      <textarea id="jsonInput" placeholder='Collez ici vos données JSON si l’URL n’est pas accessible…'></textarea>
+      <p class="badge">Format attendu: un objet par date, “Disponible/Indisponible”.</p>
+      <textarea id="jsonInput" placeholder="Collez ici vos données JSON si l’URL n’est pas accessible…"></textarea>
       <div class="controls">
         <button id="btnApply">Appliquer le JSON collé</button>
         <button id="btnSample">Load Sample Data</button>
@@ -88,10 +87,10 @@
       <h3>Filtres et légende</h3>
       <div class="row" style="gap:16px">
         <div class="filters" id="filters">
-          <label class="item"><input type="checkbox" data-prop="La Folie" checked /> La Folie</label>
-          <label class="item"><input type="checkbox" data-prop="La Corniche" checked /> La Corniche</label>
-          <label class="item"><input type="checkbox" data-prop="La Bastide" checked /> La Bastide</label>
-          <label class="item"><input type="checkbox" data-prop="Le Cottage" checked /> Le Cottage</label>
+          <label><input type="checkbox" data-prop="La Folie" checked /> La Folie</label>
+          <label><input type="checkbox" data-prop="La Corniche" checked /> La Corniche</label>
+          <label><input type="checkbox" data-prop="La Bastide" checked /> La Bastide</label>
+          <label><input type="checkbox" data-prop="Le Cottage" checked /> Le Cottage</label>
         </div>
         <div class="legend">
           <span class="item"><span class="dot blue"></span> La Folie</span>
@@ -125,27 +124,21 @@
 (function(){
   "use strict";
 
-  // Propriétés et couleurs
   const PROPS = ["La Folie","La Corniche","La Bastide","Le Cottage"];
   const COLORS = {"La Folie":"blue","La Corniche":"red","La Bastide":"green","Le Cottage":"purple"};
 
-  // État
   let viewMode = "month";
   let current = new Date(); current.setHours(0,0,0,0);
-  let dataMap = new Map();             // "YYYY-MM-DD" -> {prop: "Disponible|Indisponible"}
+  let dataMap = new Map();
   let enabledProps = new Set(PROPS);
   let autoTimer = null;
 
-  // Utilitaires DOM
   const $ = s => document.querySelector(s);
   const el = (t,c,txt)=>{const n=document.createElement(t); if(c)n.className=c; if(txt!=null)n.textContent=txt; return n;};
   const MONTHS = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
   const DOW = ["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"];
-  const toKey = d => {
-    const y=d.getUTCFullYear(), m=String(d.getUTCMonth()+1).padStart(2,"0"), da=String(d.getUTCDate()).padStart(2,"0");
-    return `${y}-${m}-${da}`;
-  };
-  const fromISO = iso => { const d = new Date(iso + "T00:00:00Z"); return Number.isNaN(d.getTime())?null:d; };
+  const toKey = d => {const y=d.getUTCFullYear(),m=String(d.getUTCMonth()+1).padStart(2,"0"),da=String(d.getUTCDate()).padStart(2,"0");return `${y}-${m}-${da}`;};
+  const fromISO = iso => {const d=new Date(iso+"T00:00:00Z");return Number.isNaN(d.getTime())?null:d;};
   const daysInMonth = (y,m)=> new Date(Date.UTC(y,m+1,0)).getUTCDate();
   const startOfMonth = d => new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1));
   const addMonths = (d,n)=> new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth()+n, 1));
@@ -166,7 +159,6 @@
     b.textContent = `Données: ${d1}/${m1}/${y1} → ${d2}/${m2}/${y2} (${dataMap.size} jours)`;
   }
 
-  // Normalisation des données
   function loadData(json){
     dataMap.clear();
     const arr = Array.isArray(json)? json : [json];
@@ -184,37 +176,35 @@
     updateBadge(); render(); msg("ok","Données chargées.");
   }
 
-  // Extraction JSON depuis une réponse HTTP (version sûre, sans "</script>" littéral)
-async function fetchAndParse(url){
-  const res = await fetch(url, {
-    headers: { 'Accept': 'application/json,text/plain;q=0.9,*/*;q=0.8' }
-  });
+  async function fetchAndParse(url){
+    const res = await fetch(url, {
+      headers: { 'Accept': 'application/json,text/plain;q=0.9,*/*;q=0.8' }
+    });
 
-  // 1) Essai JSON direct
-  try {
-    const j = await res.clone().json();
-    if (j && (Array.isArray(j) || typeof j === 'object')) return j;
-  } catch (_) {}
-
-  // 2) Essai depuis HTML avec DOMParser (pas de regex, pas de "</script>" dans le code)
-  const text = await res.text();
-  try {
-    const doc = new DOMParser().parseFromString(text, 'text/html');
-    const node = doc.querySelector('script[type="application/json"]');
-    if (node && node.textContent) {
-      const j = JSON.parse(node.textContent);
+    // 1) JSON direct
+    try {
+      const j = await res.clone().json();
       if (j && (Array.isArray(j) || typeof j === 'object')) return j;
-    }
-  } catch (_) {}
+    } catch (_) {}
 
-  // 3) Dernier recours : premier tableau JSON plausible trouvé dans le texte
-  const m = text.match(/\[\s*\{[\s\S]*?\}\s*\]/);
-  if (m) return JSON.parse(m[0]);
+    // 2) HTML → DOMParser pour trouver un script application/json
+    const text = await res.text();
+    try {
+      const doc = new DOMParser().parseFromString(text, 'text/html');
+      const node = doc.querySelector('script[type="application/json"]');
+      if (node && node.textContent) {
+        const j = JSON.parse(node.textContent);
+        if (j && (Array.isArray(j) || typeof j === 'object')) return j;
+      }
+    } catch (_) {}
 
-  throw new Error("Impossible d’interpréter la réponse comme JSON.");
-}
+    // 3) Premier tableau JSON plausible
+    const m = text.match(/\[\s*\{[\s\S]*?\}\s*\]/);
+    if (m) return JSON.parse(m[0]);
 
-  // Rendu
+    throw new Error("Impossible d’interpréter la réponse comme JSON.");
+  }
+
   function render(){
     if (viewMode==="month") renderMonth(); else renderYear();
   }
@@ -248,7 +238,7 @@ async function fetchAndParse(url){
     const wrap = el("div","year-wrap");
     for(let m=0;m<12;m++){
       const sec = el("div","mini"); sec.appendChild(el("h4",null,`${MONTHS[m]} ${y}`));
-      const header = el("div","dow"); for(const d of DOW){ const x=el("div",null,d); header.appendChild(x); }
+      const header = el("div","dow"); for(const d of DOW){ header.appendChild(el("div",null,d)); }
       header.style.padding="0 0 6px 0"; sec.appendChild(header);
       const grid = el("div","month-grid"); const first = new Date(Date.UTC(y,m,1));
       const firstDow = weekDay(first), total = daysInMonth(y,m);
@@ -268,7 +258,6 @@ async function fetchAndParse(url){
     area.appendChild(wrap);
   }
 
-  // Actions
   $("#btnMonthly").addEventListener("click",()=>{viewMode="month"; render();});
   $("#btnYearly").addEventListener("click",()=>{viewMode="year"; render();});
   $("#btnPrev").addEventListener("click",()=>{current = viewMode==="month"? addMonths(current,-1): addYears(current,-1); render();});
@@ -296,24 +285,24 @@ async function fetchAndParse(url){
   });
 
   $("#btnSample").addEventListener("click",()=>{
-    const sample=[{"date":"2025-09-18","La Folie":"Disponible","La Corniche":"Indisponible","La Bastide":"Disponible","Le Cottage":"Disponible"},
+    const sample=[
+      {"date":"2025-09-18","La Folie":"Disponible","La Corniche":"Indisponible","La Bastide":"Disponible","Le Cottage":"Disponible"},
       {"date":"2025-09-19","La Folie":"Disponible","La Corniche":"Indisponible","La Bastide":"Disponible","Le Cottage":"Disponible"},
       {"date":"2025-09-20","La Folie":"Disponible","La Corniche":"Indisponible","La Bastide":"Indisponible","Le Cottage":"Disponible"},
       {"date":"2025-10-03","La Folie":"Indisponible","La Corniche":"Disponible","La Bastide":"Disponible","Le Cottage":"Disponible"},
       {"date":"2025-12-24","La Folie":"Indisponible","La Corniche":"Indisponible","La Bastide":"Disponible","Le Cottage":"Disponible"},
-      {"date":"2026-01-02","La Folie":"Disponible","La Corniche":"Disponible","La Bastide":"Indisponible","Le Cottage":"Disponible"}];
+      {"date":"2026-01-02","La Folie":"Disponible","La Corniche":"Disponible","La Bastide":"Indisponible","Le Cottage":"Disponible"}
+    ];
     $("#jsonInput").value = JSON.stringify(sample,null,2);
     msg(null,"");
   });
 
-  // Fetch distant
   async function fetchFromUrl(){
     const url = $("#sourceUrl").value.trim();
     if(!url){ msg("error","Veuillez saisir une URL."); return; }
     msg(null,"");
     try{
       const payload = await fetchAndParse(url);
-      // Valide forme: objet(s) avec champs attendus
       if (Array.isArray(payload) || typeof payload==="object"){ loadData(payload); }
       else throw new Error("Réponse inattendue.");
     }catch(e){
@@ -323,7 +312,6 @@ async function fetchAndParse(url){
   }
   $("#btnFetch").addEventListener("click", fetchFromUrl);
 
-  // Auto-refresh toutes les 6h
   $("#btnAuto").addEventListener("click", ()=>{
     if (autoTimer){ clearInterval(autoTimer); autoTimer=null; $("#btnAuto").textContent="Activer l’auto-refresh"; msg("ok","Auto-refresh désactivé."); return; }
     autoTimer = setInterval(fetchFromUrl, 6*60*60*1000);
@@ -331,11 +319,7 @@ async function fetchAndParse(url){
     fetchFromUrl();
   });
 
-  // Premier affichage
   render(); updateBadge();
-
-  // Option: essai de chargement immédiat à l’ouverture
-  // fetchFromUrl();
 })();
 </script>
 </body>
