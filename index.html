@@ -164,6 +164,8 @@
   function loadData(json){
     dataMap.clear();
     const arr=Array.isArray(json)?json:[json];
+    let count = 0;
+    
     for(const obj of arr){
       if(!obj||typeof obj!=="object") continue;
       const d=fromISO(obj.date); if(!d) continue;
@@ -174,8 +176,12 @@
         entry[p]= raw==="indisponible" ? "Indisponible" : "Disponible";
       }
       dataMap.set(key,entry);
+      count++;
     }
-    updateBadge(); render(); msg("ok","Données chargées avec succès.");
+    
+    console.log(`${count} jours chargés dans le calendrier`);
+    updateBadge(); 
+    render();
   }
 
   async function fetchAndParse(url){
@@ -271,22 +277,32 @@
   });
 
   async function fetchFromUrl(){
-    const url=$("#sourceUrl").value.trim(); 
-    if(!url){
-      msg("error","Veuillez saisir une URL.");
+    const urlInput = document.querySelector("#sourceUrl");
+    if(!urlInput) {
+      console.error("Element #sourceUrl non trouvé");
       return;
     }
-    msg("loading","Chargement des données en cours...");
+    
+    const url = urlInput.value.trim(); 
+    if(!url){
+      console.error("URL vide");
+      return;
+    }
+    
+    console.log("Chargement des données depuis:", url);
+    
     try{
       const payload=await fetchAndParse(url);
-      if(Array.isArray(payload)||typeof payload==="object") loadData(payload);
-      else throw new Error("Réponse inattendue.");
-    }catch(e){
-      console.error(e);
-      if(e.message.includes("fetch") || e.name === "TypeError"){
-        msg("error","❌ Erreur CORS : Le serveur bloque les requêtes cross-origin. Solutions : 1) Héberger cette page sur le même domaine que l'API, 2) Configurer les headers CORS côté serveur, 3) Utiliser un proxy CORS, ou 4) Charger les données manuellement (voir ci-dessous).");
+      if(Array.isArray(payload)||typeof payload==="object") {
+        loadData(payload);
+        console.log("✅ Données chargées avec succès");
       } else {
-        msg("error","Échec du chargement depuis l'URL : "+e.message);
+        throw new Error("Réponse inattendue.");
+      }
+    }catch(e){
+      console.error("❌ Erreur de chargement:", e);
+      if(e.message.includes("fetch") || e.name === "TypeError"){
+        console.error("Erreur CORS détectée");
       }
     }
   }
@@ -311,9 +327,18 @@
     reader.readAsText(file);
   });
 
+  // Chargement automatique au démarrage
   render(); 
   updateBadge();
-  fetchFromUrl();
+  
+  // S'assurer que le DOM est complètement chargé
+  if(document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', fetchFromUrl);
+  } else {
+    fetchFromUrl(); // DOM déjà chargé, exécuter immédiatement
+  }
+  
+  // Auto-refresh toutes les 6 heures
 })();
 </script>
 </body>
