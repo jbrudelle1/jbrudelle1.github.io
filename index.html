@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Rocabella · Calendrier d’indisponibilités</title>
+<title>Rocabella · Calendrier d'indisponibilités</title>
 <style>
   :root{
     --bg:#0f1115; --panel:#171a21; --muted:#a6adbb; --text:#e7e9ee; --accent:#3b82f6;
@@ -38,8 +38,8 @@
   .msg{margin-top:8px;padding:10px 12px;border-radius:10px;font-weight:600;font-size:14px}
   .ok{background:#0f1a14;color:#9fefc0;border:1px solid #1d3e2f}
   .err{background:#241517;color:#ffb4b4;border:1px solid #4d2328}
+  .loading{background:#1a1a2e;color:#a9b2ff;border:1px solid #2b2f4d}
 
-  /* --- Conteneur calendrier, comme la capture --- */
   .cal-wrap{background:var(--panel);border:1px solid #23293a;border-radius:18px;padding:20px}
   .cal-toolbar{display:flex;align-items:center;gap:12px;margin:0 0 14px}
   .cal-toolbar .btn-round{width:44px;height:44px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;font-size:18px}
@@ -57,7 +57,7 @@
   .dots{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
   .dots .dot{width:10px;height:10px;border-radius:50%;box-shadow:0 0 0 2px #0b0f17 inset}
   @media (max-width:650px){.cell{min-height:90px}}
-  /* vue annuelle conservée */
+  
   .year-wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
   @media (max-width:1100px){.year-wrap{grid-template-columns:repeat(3,1fr)}}
   @media (max-width:820px){.year-wrap{grid-template-columns:repeat(2,1fr)}}
@@ -77,17 +77,24 @@
   </header>
 
   <div class="grid">
-    <!-- Colonne gauche -->
     <section class="card">
       <h2>Source de données</h2>
       <div class="controls">
         <input id="sourceUrl" type="text" value="https://resa.rocabella.fr/" />
-        <button id="btnFetch" class="btn-primary">Voir les indisponibilités</button>
-        <button id="btnAuto" title="Recharge automatique toutes les 6 h">Activer l’auto-refresh</button>
+        <button id="btnFetch" class="btn-primary">Recharger les données</button>
+        <button id="btnAuto" title="Recharge automatique toutes les 6 h">Activer l'auto-refresh</button>
         <span class="spacer"></span>
-        <span id="statusBadge" class="badge">Aucune donnée</span>
+        <span id="statusBadge" class="badge">Chargement...</span>
       </div>
       <div id="messageArea"></div>
+      
+      <details style="margin-top:12px">
+        <summary style="cursor:pointer;color:var(--muted);font-size:14px">📁 Charger depuis un fichier JSON</summary>
+        <div style="margin-top:10px">
+          <input type="file" id="fileInput" accept=".json,application/json" style="font-size:14px" />
+          <p style="font-size:13px;color:var(--muted);margin:8px 0 0">Si vous avez des problèmes CORS, vous pouvez charger manuellement un fichier JSON.</p>
+        </div>
+      </details>
 
       <h3>Filtres et légende</h3>
       <div class="row" style="gap:16px">
@@ -106,11 +113,9 @@
       </div>
     </section>
 
-    <!-- Colonne droite -->
     <section class="card">
-      <h2>2) Calendrier</h2>
+      <h2>Calendrier</h2>
 
-      <!-- Barre d’actions (boutons + libellé central + flèches) -->
       <div class="cal-toolbar">
         <button id="btnMonthly">Vue Mensuelle</button>
         <button id="btnYearly">Vue Annuelle</button>
@@ -119,9 +124,7 @@
         <button id="btnNext" class="btn-round">▶</button>
       </div>
 
-      <!-- Conteneur style « bloc » comme la capture -->
       <div class="cal-wrap">
-        <!-- En-têtes jours (barre sombre arrondie) -->
         <div class="dow" aria-hidden="true">
           <div>Lun</div><div>Mar</div><div>Mer</div><div>Jeu</div><div>Ven</div><div>Sam</div><div>Dim</div>
         </div>
@@ -155,13 +158,14 @@
   const startMon  = d => new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1));
   const addMonths = (d,n)=> new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth()+n, 1));
   const addYears  = (d,n)=> new Date(Date.UTC(d.getUTCFullYear()+n, d.getUTCMonth(), 1));
-  const weekDay   = d => (new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate())).getUTCDay()+6)%7; // Lun=0
+  const weekDay   = d => (new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate())).getUTCDay()+6)%7;
 
   function msg(type,text){
     const area=$("#messageArea"); area.innerHTML="";
     if(!text) return;
-    area.appendChild(el("div","msg "+(type==="error"?"err":"ok"),text));
+    area.appendChild(el("div","msg "+(type==="error"?"err":type==="loading"?"loading":"ok"),text));
   }
+  
   function updateBadge(){
     const b=$("#statusBadge");
     if(dataMap.size===0){b.textContent="Aucune donnée";return;}
@@ -184,7 +188,7 @@
       }
       dataMap.set(key,entry);
     }
-    updateBadge(); render(); msg("ok","Données chargées.");
+    updateBadge(); render(); msg("ok","Données chargées avec succès.");
   }
 
   async function fetchAndParse(url){
@@ -204,13 +208,13 @@
     }catch(_){}
     const m=text.match(/\[\s*\{[\s\S]*?\}\s*\]/);
     if(m) return JSON.parse(m[0]);
-    throw new Error("Impossible d’interpréter la réponse comme JSON.");
+    throw new Error("Impossible d'interpréter la réponse comme JSON.");
   }
 
-  /* ---------- Rendu MENSUEL ---------- */
   function render(){
     if(viewMode==="month") renderMonth(); else renderYear();
   }
+  
   function renderMonth(){
     const area=$("#calendarArea"); area.innerHTML="";
     const y=current.getUTCFullYear(), m=current.getUTCMonth();
@@ -244,7 +248,6 @@
     const rem=(firstDow+total)%7; if(rem!==0){for(let i=rem;i<7;i++) area.appendChild(el("div","cell muted")); }
   }
 
-  /* ---------- Rendu ANNUEL ---------- */
   function renderYear(){
     const area=$("#calendarArea"); area.innerHTML="";
     const y=current.getUTCFullYear(); $("#periodLabel").textContent=`Année ${y}`;
@@ -272,7 +275,6 @@
     area.appendChild(wrap);
   }
 
-  /* ---------- Interactions ---------- */
   $("#btnMonthly").addEventListener("click",()=>{viewMode="month";render();});
   $("#btnYearly").addEventListener("click",()=>{viewMode="year";render();});
   $("#btnPrev").addEventListener("click",()=>{current=viewMode==="month"?addMonths(current,-1):addYears(current,-1);render();});
@@ -282,25 +284,63 @@
   });
 
   async function fetchFromUrl(){
-    const url=$("#sourceUrl").value.trim(); if(!url){msg("error","Veuillez saisir une URL.");return;}
-    msg(null,"");
+    const url=$("#sourceUrl").value.trim(); 
+    if(!url){
+      msg("error","Veuillez saisir une URL.");
+      return;
+    }
+    msg("loading","Chargement des données en cours...");
     try{
       const payload=await fetchAndParse(url);
       if(Array.isArray(payload)||typeof payload==="object") loadData(payload);
       else throw new Error("Réponse inattendue.");
-    }catch(e){console.error(e);msg("error","Échec du chargement depuis l’URL : "+e.message);}
+    }catch(e){
+      console.error(e);
+      if(e.message.includes("fetch") || e.name === "TypeError"){
+        msg("error","❌ Erreur CORS : Le serveur bloque les requêtes cross-origin. Solutions : 1) Héberger cette page sur le même domaine que l'API, 2) Configurer les headers CORS côté serveur, 3) Utiliser un proxy CORS, ou 4) Charger les données manuellement (voir ci-dessous).");
+      } else {
+        msg("error","Échec du chargement depuis l'URL : "+e.message);
+      }
+    }
   }
+  
   $("#btnFetch").addEventListener("click",fetchFromUrl);
 
   $("#btnAuto").addEventListener("click",()=>{
-    if(autoTimer){clearInterval(autoTimer);autoTimer=null;$("#btnAuto").textContent="Activer l’auto-refresh";msg("ok","Auto-refresh désactivé.");return;}
-    autoTimer=setInterval(fetchFromUrl,6*60*60*1000); $("#btnAuto").textContent="Désactiver l’auto-refresh"; fetchFromUrl();
+    if(autoTimer){
+      clearInterval(autoTimer);
+      autoTimer=null;
+      $("#btnAuto").textContent="Activer l'auto-refresh";
+      msg("ok","Auto-refresh désactivé.");
+      return;
+    }
+    autoTimer=setInterval(fetchFromUrl,6*60*60*1000); 
+    $("#btnAuto").textContent="Désactiver l'auto-refresh"; 
+    msg("ok","Auto-refresh activé (toutes les 6h).");
   });
 
-  // initial
-  render(); updateBadge();
+  $("#fileInput").addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if(!file) return;
+    
+    msg("loading","Lecture du fichier...");
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const json = JSON.parse(event.target.result);
+        loadData(json);
+      } catch(err) {
+        msg("error","Fichier JSON invalide : " + err.message);
+      }
+    };
+    reader.onerror = () => msg("error","Erreur lors de la lecture du fichier.");
+    reader.readAsText(file);
+  });
+
+  render(); 
+  updateBadge();
+  fetchFromUrl();
 })();
 </script>
 </body>
 </html>
-
