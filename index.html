@@ -77,26 +77,14 @@
   </header>
 
   <div class="grid">
-    <section class="card">
-      <h2>Source de données</h2>
-      <div class="controls">
-        <input id="sourceUrl" type="text" value="https://resa.rocabella.fr/" />
-        <button id="btnFetch" class="btn-primary">Recharger les données</button>
-        <button id="btnAuto" title="Recharge automatique toutes les 6 h">Activer l'auto-refresh</button>
-        <span class="spacer"></span>
-        <span id="statusBadge" class="badge">Chargement...</span>
-      </div>
-      <div id="messageArea"></div>
-      
-      <details style="margin-top:12px">
-        <summary style="cursor:pointer;color:var(--muted);font-size:14px">📁 Charger depuis un fichier JSON</summary>
-        <div style="margin-top:10px">
-          <input type="file" id="fileInput" accept=".json,application/json" style="font-size:14px" />
-          <p style="font-size:13px;color:var(--muted);margin:8px 0 0">Si vous avez des problèmes CORS, vous pouvez charger manuellement un fichier JSON.</p>
-        </div>
-      </details>
+    <!-- Section Source de données masquée, champs cachés pour fonctionnalités -->
+    <input id="sourceUrl" type="hidden" value="https://resa.rocabella.fr/" />
+    <input type="file" id="fileInput" accept=".json,application/json" style="display:none" />
+    <div id="messageArea" style="display:none"></div>
+    <span id="statusBadge" style="display:none"></span>
 
-      <h3>Filtres et légende</h3>
+    <section class="card">
+      <h2>Filtres et légende</h2>
       <div class="row" style="gap:16px">
         <div class="filters" id="filters">
           <label><input type="checkbox" data-prop="La Folie" checked /> La Folie</label>
@@ -310,7 +298,7 @@
     if(autoTimer){
       clearInterval(autoTimer);
       autoTimer=null;
-      $("#btnAuto").textContent="Activer auto-refresh";
+      $("#btnAuto").textContent="Activer l'auto-refresh";
       msg("ok","Auto-refresh désactivé.");
       return;
     }
@@ -344,4 +332,3 @@
 </script>
 </body>
 </html>
-
